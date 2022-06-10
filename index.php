@@ -1,24 +1,14 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
-// +----------------------------------------------------------------------+
-// | PHP version 7                                                        |
-// +----------------------------------------------------------------------+
-// | Authors: abc1763613206 <abc1763613206@163.com>                       |
-// +----------------------------------------------------------------------+
-//
-// $Id:$
-
+// Author: Zhengfourth <https://github.com/Zhengfourth>
 $user = $_GET["user"];
 $st = $_GET["style"];
 $st1 = $_GET["st"];
 $badgehd = "Location:https://img.shields.io/badge/";
 set_time_limit(600);
-$mainUrl = "http://codeforces.com/api/user.info?handles=*";
+$mainUrl = "https://ch.tetr.io/api/users/*";
 $timeo = 0;
-do {   //发现真Unrated会返回OK....所以试下新操作
-  $ratingr = getData(str_replace("*", $user, $mainUrl));  //获取json数据并转换为数组
-  $timeo = $timeo +1;
-} while ($ratingr["status"] !== "OK" and $ratingr["comment"] !== "handles: User with handle ".$user." not found" and $timeo !== 12);
+$ratingr = getData(str_replace("*", $user, $mainUrl));  //获取json数据并转换为数组
+$timeo = $timeo +1;
 $styleraw = "?longCache=true&style=*";
 if (isset($_GET["style"])) //是否使用自定义style
 {
@@ -50,46 +40,59 @@ function getData($url) {
     $result = json_decode($result, true);
     return $result;  
 }
-$ratstr = $ratingr["result"][0]["rating"];   //从数组中提取字符串rating
+$ratstr = $ratingr["data"]["user"]["league"]["rating"];   //从数组中提取字符串rating
 $rating = intval($ratstr);    //转换为数字
-if ($rating >= 3000) {        //开始根据Rating判断段位~
-    $name = "-Legendary Grandmaster  ";
-    $color = "-red.svg";
-} elseif ($rating >= 2600) {
-    $name = "-International Grandmaster  ";
-    $color = "-red.svg";
-} elseif ($rating >= 2400) {
-    $name = "-Grandmaster  ";
-    $color = "-red.svg";
-} elseif ($rating >= 2300) {
-    $name = "-International master  ";
-    $color = "-ff8c00.svg";
-} elseif ($rating >= 2100) {
-    $name = "-Master  ";
-    $color = "-ff8c00.svg";
-} elseif ($rating >= 1900) {
-    $name = "-Candidate Master  ";
-    $color = "-aa00aa.svg";
-} elseif ($rating >= 1600) {
-    $name = "-Expert  ";
-    $color = "-00f.svg";
-} elseif ($rating >= 1400) {
-    $name = "-Specialist  ";
-    $color = "-03a89e.svg";
-} elseif ($rating >= 1200) {
-    $name = "-Pupil  ";
-    $color = "-008000.svg";
-} elseif ($rating !== 0) {   //这里可能翻车，有问题请及时反馈
-    $name = "-Newbie  ";
+if ($rating == -1) { // 特判没打满10场
+	$win = $ratingr["data"]["user"]["league"]["gameswon"];
+	$play = $ratingr["data"]["user"]["league"]["gamesplayed"];
+	$rating = $win . "/" . $play;
+}
+$name = $ratingr["data"]["user"]["league"]["rank"];
+if ($name == "z") {        //开始根据段位判断颜色~
     $color = "-808080.svg";
+	$name = "%3F";
+} else if ($name == "d") { 
+	$color = "-9e81a1.svg";
+} else if ($name == "d+") { 
+	$color = "-9a67a0.svg";
+} else if ($name == "c-") { 
+	$color = "-84679b.svg";
+} else if ($name == "c") { 
+	$color = "-7c4e9e.svg";
+} else if ($name == "c+") { 
+	$color = "-5b3399.svg";
+} else if ($name == "b-") { 
+	$color = "-5651c7.svg";
+} else if ($name == "b") { 
+	$color = "-5b73df.svg";
+} else if ($name == "b+") { 
+	$color = "-52a6c8.svg";
+} else if ($name == "a-") { 
+	$color = "-49c38a.svg";
+} else if ($name == "a") { 
+	$color = "-72d156.svg";
+} else if ($name == "a+") { 
+	$color = "-23ab32.svg";
+} else if ($name == "s-") { 
+	$color = "-e3e132.svg";
+} else if ($name == "s") { 
+	$color = "-fbc90b.svg";
+} else if ($name == "s+") { 
+	$color = "-ffe810.svg";
+} else if ($name == "ss") { 
+	$color = "-fffb92.svg";
+} else if ($name == "u") { 
+	$color = "-ff3013.svg";
+} else if ($name == "x") { 
+	$color = "-ff5aff.svg";
 } else {
-    $name = "-Unrated  ";
     $color = "-black.svg";
 }
-$style = $style. "&logo=Codeforces&link=https://codeforces.com/profile/" . $user; 
+$style = $style. "&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEABAMAAACuXLVVAAAALVBMVEVHcEwAAAAAAAAFBQUbVXofaJZ9VtCNL37JRJ+lOYQVkZ1+X+PAQKrfTqovUaqjn7QgAAAACnRSTlMAIBEwc7rMdcFvX68ANQAAAeNJREFUeNrt3b1Nw0AYxnErG9i3gHMbWIQJCA0tsAIzUKRGNGwAC7ACPRUDhIKOmhkQBsUBvVzuzmfuwvt/HLnKxy/vk5OiKPJVLyNTjQ0AAAAA7D+gjT7SAGxssgOs+glQARVQQSpAPY84UlZQx6RJOYFYgO4JWCooYQIpAaauu5BT4go65RUcBCb5KogGtOoBVEAF+SbQFVbBtZQb6aXW4l3FV1ksPbLo0yNmn1+Ue1z/BHcS4Nn/bZ7ce2cLMFcPoAIAfAYAAAAAAAAAAAAAAAAAAAAAAABKAlxKP8peXUg5l3Im/TR7HABYPQl5fJDyJuVUGsshAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE0A+U+t4v9fpwGIeR2uwLB9RaYsgKYEgFU9AUsF6leBpQImQAVUQAVUQAVUQAVUQAVUQAVUQAVU8J8qWHrnaBrA6IvlZgO06gFUQAVUIFZgvjY4uPUHBG+eYHZMYHJAXQrAqp9AYkDncdtseeKowEQAzGbxuNMN9yu7go9ZrfZzFRjnefcE7FhA4zz/tqHSFmBIAGD0xmrZAK4JtLkBVGCpQMUqKGsCs+r7EQD4+VD/w5UAQDVJAAAAAOAPAe84sSSYxpxAFAAAAABJRU5ErkJggg==&link=https://ch.tetr.io/u/" . $user; 
 $rawc1 = str_replace("_", "__", $user);
 $rawc2 = str_replace("-", "--", $rawc1);
-$rawr = $badgehd . $rawc2 . $name . $ratstr . $color . $style;
+$name = str_replace("-", "--", $name);
+$rawr = $badgehd . $rawc2 . "-" . $name . "  " . $rating . $color . $style;
 header($rawr); //拼接并输出（修复下划线转义bug）
 
 ?>
