@@ -41,7 +41,7 @@ function getData($url) {
     return $result;  
 }
 $ratstr = $ratingr["data"]["user"]["league"]["rating"];   //从数组中提取字符串rating
-$rating = intval($ratstr);    //转换为数字
+$rating = round($ratstr);    //转换为数字
 if ($rating == -1) { // 特判没打满10场
 	$win = $ratingr["data"]["user"]["league"]["gameswon"];
 	$play = $ratingr["data"]["user"]["league"]["gamesplayed"];

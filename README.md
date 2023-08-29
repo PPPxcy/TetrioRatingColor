@@ -9,14 +9,14 @@
 
 以下是三个示例：**由于启用了longCache，第一次调用时可能较慢**    
 
-https://rin.kagamine.xyz:16300/tetr.php?user=nili
-![](https://rin.kagamine.xyz:16300/tetr.php?user=nili) （这个是作者的账号哦qwq）
+https://rin.kagamine.xyz:16300/tetr.php?user=cxyzmm
+![](https://rin.kagamine.xyz:16300/tetr.php?user=cxyzmm) （这个是作者的账号哦qwq）
 
 https://rin.kagamine.xyz:16300/tetr.php?user=blaarg
 ![](https://rin.kagamine.xyz:16300/tetr.php?user=blaarg)
 
-https://rin.kagamine.xyz:16300/tetr.php?user=hibari233&style=flat-square
-![](https://rin.kagamine.xyz:16300/tetr.php?user=hibari233&style=flat-square)
+https://rin.kagamine.xyz:16300/tetr.php?user=icly&style=flat-square
+![](https://rin.kagamine.xyz:16300/tetr.php?user=icly&style=flat-square)
 
 没打满十场会显示胜场/总场，因为RD过高没有rank会显示问号rank。
 
