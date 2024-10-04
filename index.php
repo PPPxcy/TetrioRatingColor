@@ -3,20 +3,16 @@
 $user = $_GET['user'];
 $badgehd = 'Location:https://img.shields.io/badge/';
 set_time_limit(600);
-$mainUrl = 'https://ch.tetr.io/api/users/*/summaries';
-$ratingr = getData(str_replace('*', $user, $mainUrl));  //获取json数据并转换为数组
-
-// var_dump($ratingr);
-
+$mainUrl = 'https://ch.tetr.io/api/users/*/summaries/league';
+$ratingr = getData(str_replace('*', $user, $mainUrl));
 $timeo = 1;
 $styleraw = '?longCache=true&style=*';
 
 if (isset($_GET['style']))
-	//是否使用自定义style
-	$style = str_replace('*', $_GET['style'], $styleraw); //替换
+	$style = str_replace('*', $_GET['style'], $styleraw);
 else
-	$style = '?longCache=true&style=for-the-badge';  //默认是for-the-badge
-if (isset($_GET['st'])) //自定义style缩写，不可重用
+	$style = '?longCache=true&style=for-the-badge';
+if (isset($_GET['st']))
 	$style = array(
 		'f1' => '?longCache=true&style=flat',
 		'f2' => '?longCache=true&style=flat-square'
@@ -37,41 +33,38 @@ function getData($url) {
 	return $result;
 }
 
-$league = $ratingr['data']['league'];
-$ratstr = $league['tr'];   //从数组中提取字符串rating
-$rating = intval($ratstr);    //转换为数字
-if ($rating == -1) { // 特判没打满10场
-	$win = $league['gameswon'];
-	$play = $league['gamesplayed'];
-	$rating = $win . '/' . $play;
-}
+$league = $ratingr['data'];
+$ratstr = $league['tr'];
+$rating = intval($ratstr);
+if ($rating == -1)
+	$rating = $league['gameswon'] . '/' . $league['gamesplayed'];
 
 $name = $league['rank'];
 if($name == 'z')
 	$name = '%3F';
-$rankingColors = array_merge(	//	颜色表
+$rankingColors = array_merge(
 	array(
-		$name => 'black'
+		$name	=>	'black'
 	), array(
-		'x+' => 'a763ea',
-		'x' => 'ff45ff',
-		'u' => 'ff3813',
-		'ss' => 'db8b1f',
-		's+' => 'd8af0e',
-		's' => 'e0a71b',
-		's-' => 'b2972b',
-		'a+' => '1fa834',
-		'a' => '46ad51',
-		'a-' => '3bb687',
-		'b+' => '4f99c0',
-		'b' => '4f64c9',
-		'b-' => '5650c7',
-		'c+' => '552883',
-		'c' => '733e8f',
-		'c-' => '79558c',
-		'd+' => '8e6091',
-		'd' => '907591',
-		'%3F' => '375433'
+		'x+'	=>	'a763ea',
+		'x'		=>	'ff45ff',
+		'u'		=>	'ff3813',
+		'ss'	=>	'db8b1f',
+		's+'	=>	'd8af0e',
+		's'		=>	'e0a71b',
+		's-'	=>	'b2972b',
+		'a+'	=>	'1fa834',
+		'a'		=>	'46ad51',
+		'a-'	=>	'3bb687',
+		'b+'	=>	'4f99c0',
+		'b'		=>	'4f64c9',
+		'b-'	=>	'5650c7',
+		'c+'	=>	'552883',
+		'c'		=>	'733e8f',
+		'c-'	=>	'79558c',
+		'd+'	=>	'8e6091',
+		'd'		=>	'907591',
+		'%3F'	=>	'375433'
 	)
 );
 $color = $rankingColors[$name];
@@ -82,6 +75,6 @@ $rawc1 = str_replace('_', '__', $user);
 $rawc2 = str_replace('-', '--', $rawc1);
 $name = str_replace('-', '--', $name);
 $rawr = $badgehd . $rawc2 . '-' . $name . '  ' . $rating . '-' . $color . $style;
-header($rawr); //拼接并输出（修复下划线转义bug）
+header($rawr);
 
 ?>
